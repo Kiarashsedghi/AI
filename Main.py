@@ -1,5 +1,5 @@
 from Library import *
-
+from math import sqrt
 class Main:
     def __init__(self):
         self.mazeMap=list()
@@ -31,8 +31,19 @@ class Main:
             return 1
         return 0
 
+    def create_path(self,node):
 
+        while node.parent!=None:
+            self.pathActions.append(node.action)
+            self.pathCost+=1
+            node=node.parent
+        # reverse the order
+        self.pathActions.reverse()
 
+    def clear_counters(self):
+        self.pathActions = []
+        self.pathCost = 0
+        self.nodeCount = 0
 
     def report(self,algorithm):
         if self.pathExist is False:
@@ -43,9 +54,8 @@ class Main:
             print("Path cost is: ",self.pathCost)
             if algorithm=="RDS":
                 print("Depth: ",self.finalDepth)
-            #TODO‌ path_print
 
-
+            print(self.pathActions)
     def bfs_go(self):
         '''
         This function performs BFS search
@@ -59,6 +69,7 @@ class Main:
         frontier=Queue()
         frontier.enqueue(rootNode)
         explored=list()
+
 
         while(1):
             if frontier.isempty():
@@ -81,14 +92,14 @@ class Main:
                 self.nodeCount+=1
                 if (frontier.state_exist(childNode.state)) or (childNode.state not in explored):
                     if self.goal_test(childNode):
-                        self.pathCost=childNode.cost
                         self.pathExist=True
+                        self.create_path(childNode)
                         return 1
                     frontier.enqueue(childNode)
 
     def dls_recursive(self,node,limit):
         if self.goal_test(node):
-            self.pathCost=node.cost
+            self.create_path(node)
             return 1
         elif limit==0:
             return self.cutOffValue
@@ -134,6 +145,7 @@ class Main:
             if result != self.cutOffValue:
                 self.pathExist=True
                 self.finalDepth=depth
+                print("res", result)
                 return result
 
         # If no return happened in the the previous loop, it means goal was
@@ -141,18 +153,87 @@ class Main:
         self.pathExist=False
 
 
+    def heuristic(self,nodeState):
+        # EP: end point
+        EPx=self.endPoint[0]
+        EPy=self.endPoint[1]
+        x=nodeState[0]
+        y=nodeState[1]
+
+        return round(sqrt((abs(x-EPx))**2 + (abs(y-EPy))**2))
+
+    def a_star(self):
+        rootNode=GraphNode(self.startPoint,None,None,self.heuristic(self.startPoint))
+        frontier=Queue()
+        frontier.enqueue(rootNode)
+        explored=list()
+        while(1):
+            if frontier.isempty():
+                return 0
+            node=frontier.dequeue()
+            if self.goal_test(node):
+                self.pathExist=True
+                self.create_path(node)
+
+                return 1
+            explored.append(node.state)
+            for action in get_actions(self.mazeMap,node.state):
+                childState = None
+                if action == "right":
+                    childState = (node.state[0], node.state[1] + 2)
+                elif action == "left":
+                    childState = (node.state[0], node.state[1] - 2)
+                elif action == "up":
+                    childState = (node.state[0] - 1, node.state[1])
+                elif action == "down":
+                    childState = (node.state[0] + 1, node.state[1])
+
+                childNode = GraphNode(childState, node, action, self.heuristic(childState) + 1)
+                self.nodeCount += 1
+
+                if (frontier.state_exist(childNode.state)) or (childNode.state not in explored):
+                    frontier.enqueue(childNode)
+                    frontier.queue.sort(key=lambda x: x.cost)
+
+                else:
+                    states= [node.state for node in frontier.get_queue()]
+                    if (childState in states):
+                        index=states.index(childState)
+                        if ((self.heuristic(childState) + 1 ) < frontier.get_queue().index(index).cost):
+                            frontier.queue[index]=childNode
 
 
 
 
 
 
-a=Main()
-a.init_map()
+
+
+
+
+
+
+
+
+obj=Main()
+
+r=[(1,5),(-1,12)]
+
+
+obj.init_map()
 print("-----BFS-----")
-a.bfs_go()
-a.report("BFS")
+obj.bfs_go()
+obj.report("BFS")
+obj.clear_counters()
 
 print("\n-----RDS-----")
-a.rds_go()
-a.report("RDS")
+obj.rds_go()
+obj.report("RDS")
+obj.clear_counters()
+
+
+print("\n-----A*-----")
+obj.a_star()
+obj.report("A*")
+
+

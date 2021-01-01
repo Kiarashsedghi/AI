@@ -26,6 +26,11 @@ class Queue:
             return 1
         return 0
 
+    def get_queue(self):
+        return self.queue
+
+
+
 def get_actions(mazeMap,state):
     '''
     This function receive maze map and current nodes state , and then returns
