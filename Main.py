@@ -12,7 +12,7 @@ class Main:
         self.cutOffValue=90
         self.cutOffOccurred=False
         self.finalDepth=0
-        self.maxDepth=1000
+        self.maxDepth=35
 
 
     def init_map(self):
