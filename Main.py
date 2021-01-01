@@ -34,15 +34,15 @@ class Main:
 
 
 
-    def report(self):
+    def report(self,algorithm):
         if self.pathExist is False:
             print("No path to goal :(")
             print("#Node created: ",self.nodeCount)
         else:
-            print("Path to goal")
-            print("------------")
             print("#Node created: ",self.nodeCount)
             print("Path cost is: ",self.pathCost)
+            if algorithm=="RDS":
+                print("Depth: ",self.finalDepth)
             #TODO‌ path_print
 
 
@@ -88,6 +88,7 @@ class Main:
 
     def dls_recursive(self,node,limit):
         if self.goal_test(node):
+            self.pathCost=node.cost
             return 1
         elif limit==0:
             return self.cutOffValue
@@ -148,7 +149,10 @@ class Main:
 
 a=Main()
 a.init_map()
-# a.bfs_go()
-# a.report()
+print("-----BFS-----")
+a.bfs_go()
+a.report("BFS")
+
+print("\n-----RDS-----")
 a.rds_go()
-a.report()
+a.report("RDS")
