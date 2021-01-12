@@ -1,8 +1,10 @@
 from Library import *
 from math import sqrt
+
 class Main:
     def __init__(self):
         self.mazeMap=list()
+
         self.startPoint=None
         self.endPoint=None
         self.nodeCount=0
@@ -12,7 +14,7 @@ class Main:
         self.cutOffValue=90
         self.cutOffOccurred=False
         self.finalDepth=0
-        self.maxDepth=35
+        self.maxDepth=20
 
 
     def init_map(self):
@@ -26,6 +28,8 @@ class Main:
             if "G" in self.mazeMap[i]:
                 self.endPoint=(i,(self.mazeMap[i].index("G")))
 
+
+
     def goal_test(self,node):
         if node.state==self.endPoint:
             return 1
@@ -33,12 +37,24 @@ class Main:
 
     def create_path(self,node):
 
-        while node.parent!=None:
+        while (node.parent)!=None:
             self.pathActions.append(node.action)
             self.pathCost+=1
+            MAPx=node.state[0]
+            MAPy=node.state[1]
+            rowString=self.mazeMap[MAPx]
+
+            if (node.action in "right left") and  (not self.goal_test(node)):
+                self.mazeMap[MAPx]=rowString[:MAPy]+"-"+rowString[MAPy+1:]
+            elif (node.action in "up down") and (not self.goal_test(node)):
+                    self.mazeMap[MAPx]=rowString[:MAPy]+"|"+rowString[MAPy+1:]
             node=node.parent
         # reverse the order
         self.pathActions.reverse()
+
+        # print maze map for the algorithms
+        for row in self.mazeMap:
+            print(row)
 
     def clear_counters(self):
         self.pathActions = []
@@ -55,7 +71,11 @@ class Main:
             if algorithm=="RDS":
                 print("Depth: ",self.finalDepth)
 
-            print(self.pathActions)
+            print("Path Actions: "," ".join(self.pathActions))
+
+
+
+
     def bfs_go(self):
         '''
         This function performs BFS search
@@ -142,6 +162,7 @@ class Main:
     def rds_go(self):
         for depth in range(self.maxDepth):
             result=self.dls_go(depth)
+
             if result != self.cutOffValue:
                 self.pathExist=True
                 self.finalDepth=depth
@@ -159,7 +180,7 @@ class Main:
         EPy=self.endPoint[1]
         x=nodeState[0]
         y=nodeState[1]
-
+        
         return round(sqrt((abs(x-EPx))**2 + (abs(y-EPy))**2))
 
     def a_star(self):
@@ -217,22 +238,30 @@ class Main:
 
 obj=Main()
 
-r=[(1,5),(-1,12)]
 
 
 obj.init_map()
-print("-----BFS-----")
+print("-------------")
+print("     BFS     ")
+print("-------------")
+
 obj.bfs_go()
 obj.report("BFS")
 obj.clear_counters()
+print("\n\n")
 
-print("\n-----RDS-----")
+print("-------------")
+print("     RDS     ")
+print("-------------")
 obj.rds_go()
 obj.report("RDS")
 obj.clear_counters()
+print("\n\n")
 
 
-print("\n-----A*-----")
+print("-------------")
+print("     A*     ")
+print("-------------")
 obj.a_star()
 obj.report("A*")
 
