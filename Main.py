@@ -4,7 +4,7 @@ from math import sqrt
 class Main:
     def __init__(self):
         self.mazeMap=list()
-
+        self.mazeMapPath=list()
         self.startPoint=None
         self.endPoint=None
         self.nodeCount=0
@@ -36,24 +36,25 @@ class Main:
         return 0
 
     def create_path(self,node):
+        self.mazeMapPath=self.mazeMap
 
         while (node.parent)!=None:
             self.pathActions.append(node.action)
             self.pathCost+=1
             MAPx=node.state[0]
             MAPy=node.state[1]
-            rowString=self.mazeMap[MAPx]
+            rowString=self.mazeMapPath[MAPx]
 
             if (node.action in "right left") and  (not self.goal_test(node)):
-                self.mazeMap[MAPx]=rowString[:MAPy]+"-"+rowString[MAPy+1:]
+                self.mazeMapPath[MAPx]=rowString[:MAPy]+"-"+rowString[MAPy+1:]
             elif (node.action in "up down") and (not self.goal_test(node)):
-                    self.mazeMap[MAPx]=rowString[:MAPy]+"|"+rowString[MAPy+1:]
+                    self.mazeMapPath[MAPx]=rowString[:MAPy]+"|"+rowString[MAPy+1:]
             node=node.parent
         # reverse the order
         self.pathActions.reverse()
 
         # print maze map for the algorithms
-        for row in self.mazeMap:
+        for row in self.mazeMapPath:
             print(row)
 
     def clear_counters(self):
