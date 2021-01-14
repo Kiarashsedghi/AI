@@ -210,7 +210,7 @@ class Main:
                 elif action == "down":
                     childState = (node.state[0] + 1, node.state[1])
 
-                childNode = GraphNode(childState, node, action, self.heuristic(childState) + 1)
+                childNode = GraphNode(childState, node, action, node.cost + 1)
                 self.nodeCount += 1
 
                 if (frontier.state_exist(childNode.state)) or (childNode.state not in explored):
@@ -221,19 +221,9 @@ class Main:
                     states= [node.state for node in frontier.get_queue()]
                     if (childState in states):
                         index=states.index(childState)
-                        if ((self.heuristic(childState) + 1 ) < frontier.get_queue().index(index).cost):
+                        
+                        if (self.heuristic(childState) + childNode.cost ) < frontier.get_queue().index(index).cost + self.heuristic(frontier.get_queue().index(index)):
                             frontier.queue[index]=childNode
-
-
-
-
-
-
-
-
-
-
-
 
 
 
