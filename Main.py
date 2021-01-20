@@ -59,17 +59,21 @@ class Main:
 
             self.mazeMap[goalX]=self.mazeMap[goalX][:goalY]+"G"+self.mazeMap[goalX][goalY+1:]
 
-
-            # print new map
-
-            for row in self.mazeMap:
-                print(row)
-
             print("----------------------------------------")
             print("----------------------------------------")
             print("              RANDOM MAP                ")
             print("----------------------------------------")
             print("----------------------------------------\n")
+            
+            
+            # print new map
+
+            for row in self.mazeMap:
+                print(row)
+                
+            print()
+
+          
 
 
     def run_algorithms(self,algorithms):
