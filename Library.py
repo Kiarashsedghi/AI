@@ -45,77 +45,77 @@ def get_actions(mazeMap,state):
     y=state[1]
 
     if x==0 and y==0:
-        if mazeMap[0][2]!="*":
+        if mazeMap[0][2]!=".":
             possibleActions.append("right")
-        if mazeMap[1][0]!="*":
+        if mazeMap[1][0]!=".":
             possibleActions.append("down")
 
 
     elif x==0 and y==38:
       
-        if mazeMap[0][36]!="*":
+        if mazeMap[0][36]!=".":
             possibleActions.append("left")
         
-        if mazeMap[1][38]!="*":
+        if mazeMap[1][38]!=".":
             possibleActions.append("down")
 
 
 
     elif x==19 and y==0:
-        if mazeMap[18][0]!="*":
+        if mazeMap[18][0]!=".":
             possibleActions.append("up")
-        if mazeMap[19][2]!="*":
+        if mazeMap[19][2]!=".":
             possibleActions.append("right")
 
 
     elif x==19 and y==38:
-        if mazeMap[19][36]!="*":
+        if mazeMap[19][36]!=".":
             possibleActions.append("left")
-        if mazeMap[18][38]!="*":
+        if mazeMap[18][38]!=".":
             possibleActions.append("up")
 
 
 
     elif x==0:
-        if mazeMap[0][y+2] != "*":
+        if mazeMap[0][y+2] != ".":
             possibleActions.append("right")
-        if mazeMap[0][y-2] != "*":
+        if mazeMap[0][y-2] != ".":
             possibleActions.append("left")
-        if mazeMap[1][y] != "*":
+        if mazeMap[1][y] != ".":
             possibleActions.append("down")
 
     elif x==19:
-        if mazeMap[0][y+2] != "*":
+        if mazeMap[0][y+2] != ".":
             possibleActions.append("right")
-        if mazeMap[0][y-2] != "*":
+        if mazeMap[0][y-2] != ".":
             possibleActions.append("left")
-        if mazeMap[18][y] != "*":
+        if mazeMap[18][y] != ".":
             possibleActions.append("up")
 
     elif y==0:
-        if mazeMap[x-1][0] != "*":
+        if mazeMap[x-1][0] != ".":
             possibleActions.append("up")
-        if mazeMap[x+1][0] != "*":
+        if mazeMap[x+1][0] != ".":
             possibleActions.append("down")
-        if mazeMap[x][2] != "*":
+        if mazeMap[x][2] != ".":
             possibleActions.append("right")
 
     elif y==38:
-        if mazeMap[x-1][38] != "*":
+        if mazeMap[x-1][38] != ".":
             possibleActions.append("up")
-        if mazeMap[x+1][38] != "*":
+        if mazeMap[x+1][38] != ".":
             possibleActions.append("down")
-        if mazeMap[x][36] != "*":
+        if mazeMap[x][36] != ".":
             possibleActions.append("left")
 
     else:
-        if mazeMap[x-1][y] != "*":
+        if mazeMap[x-1][y] != ".":
             possibleActions.append("up")
-        if mazeMap[x+1][y] != "*":
+        if mazeMap[x+1][y] != ".":
             possibleActions.append("down")
-        if mazeMap[x][y-2] != "*":
+        if mazeMap[x][y-2] != ".":
             possibleActions.append("left")
-        if mazeMap[x][y+2] != "*":
+        if mazeMap[x][y+2] != ".":
             possibleActions.append("right")
 
 

@@ -40,7 +40,7 @@ class Main:
             tmpList=list()
             for i in range(20):
                 for j in range(20):
-                    tmpList.append(choice(" *"))
+                    tmpList.append(choice(" ."))
                     
                 self.mazeMap.append(" ".join(tmpList))
                 tmpList=[]
@@ -135,9 +135,9 @@ class Main:
             rowString=self.mazeMapPath[MAPx]
 
             if (node.action in "right left") and  (not self.goal_test(node)):
-                self.mazeMapPath[MAPx]=rowString[:MAPy]+"-"+rowString[MAPy+1:]
+                self.mazeMapPath[MAPx]=rowString[:MAPy]+"*"+rowString[MAPy+1:]
             elif (node.action in "up down") and (not self.goal_test(node)):
-                    self.mazeMapPath[MAPx]=rowString[:MAPy]+"|"+rowString[MAPy+1:]
+                    self.mazeMapPath[MAPx]=rowString[:MAPy]+"*"+rowString[MAPy+1:]
             node=node.parent
         # reverse the order
         self.pathActions.reverse()
