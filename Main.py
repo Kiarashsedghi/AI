@@ -1,5 +1,11 @@
+#!/usr/bin/python3.8
 from Library import *
 from math import sqrt
+from sys import argv
+from random import choice
+
+from argparse import ArgumentParser
+
 
 class Main:
     def __init__(self):
@@ -14,22 +20,97 @@ class Main:
         self.cutOffValue=90
         self.cutOffOccurred=False
         self.finalDepth=0
-        self.maxDepth=20
+        self.maxDepth=15
+        self.supportedAlgorithms=["bfs","a*","rds"]
 
 
-    def init_map(self):
-        fh=open("./MAZE MAP")
-        # row[:-1] for eliminating line feed
-        self.mazeMap=[row[:-1] for row in  fh.readlines()]
-        fh.close()
-        for i in range(20):
-            if "S" in self.mazeMap[i]:
-                self.startPoint=(i,(self.mazeMap[i].index("S")))
-            if "G" in self.mazeMap[i]:
-                self.endPoint=(i,(self.mazeMap[i].index("G")))
+    def init_map(self,file):
+        if file is not None:
+            fh=open(file)
+            # row[:-1] for eliminating line feed
+            self.mazeMap=[row[:-1] for row in  fh.readlines()]
+            fh.close()
+            for i in range(20):
+                if "S" in self.mazeMap[i]:
+                    self.startPoint=(i,(self.mazeMap[i].index("S")))
+                if "G" in self.mazeMap[i]:
+                    self.endPoint=(i,(self.mazeMap[i].index("G")))
+
+        else:
+            tmpList=list()
+            for i in range(20):
+                for j in range(20):
+                    tmpList.append(choice(" *"))
+                    
+                self.mazeMap.append(" ".join(tmpList))
+                tmpList=[]
+
+            # choosing random x,y for source
+            sourceX=choice([i for i in range(20)])
+            sourceY=choice([i for i in range(40) if i%2==0])
+            self.startPoint=(sourceX,sourceY)
+           
+            # choosing random x,y for goal
+            goalX=choice([i for i in range(20) if i!=sourceX])
+            goalY=choice([i for i in range(40) if i%2==0 and i!=sourceY])
+            self.endPoint=(goalX,goalY)
+
+            self.mazeMap[sourceX]=self.mazeMap[sourceX][:sourceY]+"S"+self.mazeMap[sourceX][sourceY+1:]
+
+            self.mazeMap[goalX]=self.mazeMap[goalX][:goalY]+"G"+self.mazeMap[goalX][goalY+1:]
+
+
+            # print new map
+
+            for row in self.mazeMap:
+                print(row)
+
+            print("----------------------------------------")
+            print("----------------------------------------")
+            print("              RANDOM MAP                ")
+            print("----------------------------------------")
+            print("----------------------------------------\n")
+
+
+    def run_algorithms(self,algorithms):
+        if algorithms is None:
+            algorithms=self.supportedAlgorithms
+
+        for algorithm in algorithms:
+            if algorithm in self.supportedAlgorithms:
+                if algorithm=="bfs":
+                    print("-------------")
+                    print("     BFS     ")
+                    print("-------------")
+
+                    self.bfs_go()
+                    self.report("BFS")
+
+                elif algorithm=="rds":
+                    
+                    print("-------------")
+                    print("     RDS     ")
+                    print("-------------")
+                    self.rds_go()
+                    self.report("RDS")
+
+                elif algorithm=="a*":
+
+                    print("-------------")
+                    print("     A*     ")
+                    print("-------------")
+                    self.a_star()
+                    self.report("A*")
+  
+                self.clear_counters()
+                print("\n\n")
+            else:
+                print("%% Algorithm '{0}' is unknown\n".format(algorithm))
 
 
 
+
+           
     def goal_test(self,node):
         if node.state==self.endPoint:
             return 1
@@ -184,6 +265,7 @@ class Main:
         
         return round(sqrt((abs(x-EPx))**2 + (abs(y-EPy))**2))
 
+
     def a_star(self):
         rootNode=GraphNode(self.startPoint,None,None,self.heuristic(self.startPoint))
         frontier=Queue()
@@ -227,33 +309,20 @@ class Main:
 
 
 
-obj=Main()
 
 
 
-obj.init_map()
-print("-------------")
-print("     BFS     ")
-print("-------------")
 
-obj.bfs_go()
-obj.report("BFS")
-obj.clear_counters()
-print("\n\n")
-
-print("-------------")
-print("     RDS     ")
-print("-------------")
-obj.rds_go()
-obj.report("RDS")
-obj.clear_counters()
-print("\n\n")
+program=Main()
+parser = ArgumentParser()
+parser.add_argument("-f","--file")
+parser.add_argument("-a","--algorithms",nargs='+')
+args = parser.parse_args()
 
 
-print("-------------")
-print("     A*     ")
-print("-------------")
-obj.a_star()
-obj.report("A*")
+program.init_map(args.file)
+
+program.run_algorithms(args.algorithms)
+
 
 
